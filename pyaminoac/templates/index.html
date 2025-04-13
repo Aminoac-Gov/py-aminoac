@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title|default('PyAminoac REST API') }}</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Icons from Heroicons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+              800: '#075985',
+              900: '#0c4a6e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Nav Bar -->
+  <nav class="bg-primary-600 text-white shadow-md">
+    <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-4">
+        <button class="p-1 focus:outline-none focus:ring-2 focus:ring-white rounded-md">
+          <i class="fas fa-bars"></i>
+        </button>
+        <h1 class="text-xl font-bold">{{ service_name|default('PyAminoac REST API') }}</h1>
+      </div>
+      <div class="flex items-center space-x-2">
+        <button class="p-2 hover:bg-primary-700 rounded-full focus:outline-none focus:ring-2 focus:ring-white">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="p-2 hover:bg-primary-700 rounded-full focus:outline-none focus:ring-2 focus:ring-white">
+          <i class="fas fa-ellipsis-v"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mx-auto px-4 py-6">
+    <!-- Introduction Card -->
+    <div class="bg-white rounded-lg shadow-md mb-6 overflow-hidden">
+      <div class="p-6">
+        <h2 class="text-xl font-bold text-gray-800">{{ api_title|default('PyAminoac Translation Service') }}</h2>
+        <p class="text-sm text-gray-600 mt-1">{{ api_subtitle|default('A REST API for text translation') }}</p>
+        <div class="mt-4 text-gray-700">
+          <p>{{ api_description|default('This service provides an API for translating text via the PyAminoac system. Use the interface below to test the API endpoints.') }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Translate Section -->
+    <div class="bg-white rounded-lg shadow-md mb-6 overflow-hidden">
+      <div class="p-6">
+        <h2 class="text-xl font-bold text-gray-800">Translate Text</h2>
+        <p class="text-sm text-gray-600 mt-1">Endpoint: /translate</p>
+        
+        <div class="mt-4">
+          <div class="bg-gray-100 p-2 rounded font-mono text-sm">
+            GET /translate?text=your_text_here
+          </div>
+          
+          <div class="mt-4">
+            <label for="translate-input" class="block text-sm font-medium text-gray-700 mb-1">Enter text to translate</label>
+            <textarea id="translate-input" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"></textarea>
+          </div>
+          
+          <button id="translate-btn" class="mt-4 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md shadow-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+            Translate
+          </button>
+          
+          <div class="mt-6">
+            <div class="border border-gray-200 rounded-md overflow-hidden">
+              <button id="response-toggle" class="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 text-left font-medium flex items-center justify-between">
+                <span>Response</span>
+                <i class="fas fa-chevron-down transition-transform duration-200" id="response-arrow"></i>
+              </button>
+              <div id="response-panel" class="hidden">
+                <pre id="translate-response" class="p-4 bg-gray-50 font-mono text-sm whitespace-pre-wrap">Response will appear here</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Health Check Section -->
+    <div class="bg-white rounded-lg shadow-md mb-6 overflow-hidden">
+      <div class="p-6">
+        <h2 class="text-xl font-bold text-gray-800">Health Check</h2>
+        <p class="text-sm text-gray-600 mt-1">Endpoint: /health</p>
+        
+        <div class="mt-4">
+          <div class="bg-gray-100 p-2 rounded font-mono text-sm">
+            GET /health
+          </div>
+          
+          <button id="health-btn" class="mt-4 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-md shadow-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+            Check Health
+          </button>
+          
+          <div class="mt-6">
+            <div class="border border-gray-200 rounded-md overflow-hidden">
+              <button id="health-toggle" class="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 text-left font-medium flex items-center justify-between">
+                <span>Response</span>
+                <i class="fas fa-chevron-down transition-transform duration-200" id="health-arrow"></i>
+              </button>
+              <div id="health-panel" class="hidden">
+                <pre id="health-response" class="p-4 bg-gray-50 font-mono text-sm whitespace-pre-wrap">Response will appear here</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Documentation -->
+    <div class="bg-white rounded-lg shadow-md mb-6 overflow-hidden">
+      <div class="p-6">
+        <h2 class="text-xl font-bold text-gray-800">API Documentation</h2>
+        
+        <div class="mt-4 space-y-4">
+          <!-- Translate Endpoint -->
+          <div class="border border-gray-200 rounded-md overflow-hidden">
+            <button class="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 text-left font-medium flex items-center justify-between doc-toggle">
+              <div>
+                <span class="font-bold">GET /translate</span>
+                <span class="text-gray-600 ml-2">Translate text</span>
+              </div>
+              <i class="fas fa-chevron-down transition-transform duration-200 doc-arrow"></i>
+            </button>
+            <div class="hidden doc-panel">
+              <div class="p-4 border-t border-gray-200">
+                <p class="mb-2"><strong>Description:</strong> Translates the provided text using the PyAminoac translation service.</p>
+                <p class="mb-2"><strong>Query Parameters:</strong></p>
+                <ul class="list-disc ml-5 mb-4">
+                  <li><code class="bg-gray-100 px-1 rounded">text</code> (required): The text to translate</li>
+                </ul>
+                <p class="mb-2"><strong>Response:</strong></p>
+                <pre class="bg-gray-100 p-3 rounded font-mono text-sm">{
+  "original": "Original text",
+  "translated": "Translated text",
+  "status": "success"
+}</pre>
+                <p class="mt-4 mb-2"><strong>Error Response:</strong></p>
+                <pre class="bg-gray-100 p-3 rounded font-mono text-sm">{
+  "error": "Error message",
+  "status": "error"
+}</pre>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Health Endpoint -->
+          <div class="border border-gray-200 rounded-md overflow-hidden">
+            <button class="w-full px-4 py-3 bg-gray-50 hover:bg-gray-100 text-left font-medium flex items-center justify-between doc-toggle">
+              <div>
+                <span class="font-bold">GET /health</span>
+                <span class="text-gray-600 ml-2">Check service health</span>
+              </div>
+              <i class="fas fa-chevron-down transition-transform duration-200 doc-arrow"></i>
+            </button>
+            <div class="hidden doc-panel">
+              <div class="p-4 border-t border-gray-200">
+                <p class="mb-2"><strong>Description:</strong> Returns the current health status of the PyAminoac service.</p>
+                <p class="mb-2"><strong>Response:</strong></p>
+                <pre class="bg-gray-100 p-3 rounded font-mono text-sm">{
+  "status": "healthy",
+  "service": "pyaminoac"
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="text-center text-gray-500 text-sm py-6">
+      {{ service_name|default('PyAminoac REST API') }} &copy; {{ year|default('2025') }} | Port: {{ port|default('8963') }}
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Base URL for API
+      const baseUrl = window.location.origin;
+      
+      // Toggle functions for collapsible panels
+      function setupToggle(toggleId, panelId, arrowId) {
+        const toggle = document.getElementById(toggleId);
+        const panel = document.getElementById(panelId);
+        const arrow = document.getElementById(arrowId);
+        
+        toggle.addEventListener('click', function() {
+          panel.classList.toggle('hidden');
+          arrow.classList.toggle('rotate-180');
+        });
+      }
+      
+      // Setup main toggles
+      setupToggle('response-toggle', 'response-panel', 'response-arrow');
+      setupToggle('health-toggle', 'health-panel', 'health-arrow');
+      
+      // Setup doc toggles
+      const docToggles = document.querySelectorAll('.doc-toggle');
+      docToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+          const panel = this.nextElementSibling;
+          panel.classList.toggle('hidden');
+          const arrow = this.querySelector('.doc-arrow');
+          arrow.classList.toggle('rotate-180');
+        });
+      });
+      
+      // Translate button click handler
+      document.getElementById('translate-btn').addEventListener('click', function() {
+        const textToTranslate = document.getElementById('translate-input').value;
+        if (!textToTranslate) {
+          alert('Please enter text to translate');
+          return;
+        }
+        
+        const responseArea = document.getElementById('translate-response');
+        responseArea.innerText = 'Loading...';
+        
+        // Show the response panel
+        document.getElementById('response-panel').classList.remove('hidden');
+        
+        // Make the API call
+        fetch(`${baseUrl}/translate?text=${encodeURIComponent(textToTranslate)}`)
+          .then(response => response.json())
+          .then(data => {
+            responseArea.innerText = JSON.stringify(data, null, 2);
+            responseArea.className = data.status === 'success' 
+              ? 'p-4 bg-green-50 font-mono text-sm whitespace-pre-wrap' 
+              : 'p-4 bg-red-50 font-mono text-sm whitespace-pre-wrap';
+          })
+          .catch(error => {
+            responseArea.innerText = `Error: ${error.message}`;
+            responseArea.className = 'p-4 bg-red-50 font-mono text-sm whitespace-pre-wrap';
+          });
+      });
+      
+      // Health check button click handler
+      document.getElementById('health-btn').addEventListener('click', function() {
+        const responseArea = document.getElementById('health-response');
+        responseArea.innerText = 'Loading...';
+        
+        // Show the response panel
+        document.getElementById('health-panel').classList.remove('hidden');
+        
+        // Make the API call
+        fetch(`${baseUrl}/health`)
+          .then(response => response.json())
+          .then(data => {
+            responseArea.innerText = JSON.stringify(data, null, 2);
+            responseArea.className = data.status === 'healthy' 
+              ? 'p-4 bg-green-50 font-mono text-sm whitespace-pre-wrap' 
+              : 'p-4 bg-red-50 font-mono text-sm whitespace-pre-wrap';
+          })
+          .catch(error => {
+            responseArea.innerText = `Error: ${error.message}`;
+            responseArea.className = 'p-4 bg-red-50 font-mono text-sm whitespace-pre-wrap';
+          });
+      });
+    });
+  </script>
+</body>
+</html>
