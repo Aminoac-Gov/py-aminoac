@@ -1,0 +1,5 @@
+flask>=2.0.0
+jieba>=0.42.1
+pypinyin>=0.46.0
+click>=8.0.0
+zhconv>=1.4.3
